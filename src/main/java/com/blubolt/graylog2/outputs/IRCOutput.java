@@ -115,6 +115,11 @@ public class IRCOutput implements MessageOutput {
 	
 	public void write(List<LogMessage> messages, OutputStreamConfiguration streamConfiguration, GraylogServer server) throws Exception
 	{
+		// Fail silently if we failed to initialize
+		if (this.bot == null) {
+			return;
+		}
+		
 		// Connect
 		if (!this.bot.isConnected()) {
 			this.bot.connect(this.hostname, this.port, this.password);
