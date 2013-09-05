@@ -103,7 +103,7 @@ public class IRCOutput implements MessageOutput {
 		this.bot = new PircBotX();
 		this.bot.setName(this.nickname);
 		this.bot.setLogin(this.nickname);
-		this.bot.setVersion("Graylog2 IRC Output plugin version 0.1");
+		this.bot.setVersion("Graylog2 IRC Output plugin version 0.2");
 		this.bot.setMessageDelay(0); // No delay between message sends
 	}
 	
