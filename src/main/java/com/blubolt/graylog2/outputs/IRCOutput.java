@@ -61,13 +61,14 @@ public class IRCOutput implements MessageOutput {
 	private int port;
 	private String password;
 	private String webinterfaceHostname;
+	private String nickname;
 	
 	private PircBotX bot;
 	
 	public void initialize(Map<String, String> configuration) throws MessageOutputConfigurationException
 	{
 		//  Hostname
-		if (!configSet(configuration, "hostname")) {			
+		if (!configSet(configuration, "hostname")) {
 			throw new MessageOutputConfigurationException("Missing hostname");
 		}
 		this.hostname = configuration.get("hostname");
@@ -86,6 +87,13 @@ public class IRCOutput implements MessageOutput {
 			this.password = configuration.get("password");
 		}
 		
+		// Nickname
+		if (configSet(configuration, "nickname")) {
+			this.nickname = configuration.get("nickname");
+		} else {
+			this.nickname = "graylog2";
+		}
+		
 		// Web interface hostname
 		if (configSet(configuration, "webinterfaceHostname")) {
 			this.webinterfaceHostname = configuration.get("webinterfaceHostname");
@@ -93,16 +101,16 @@ public class IRCOutput implements MessageOutput {
 		
 		// Make bot
 		this.bot = new PircBotX();
-		this.bot.setName("graylog2");
-		this.bot.setLogin("graylog2");
+		this.bot.setName(this.nickname);
+		this.bot.setLogin(this.nickname);
 		this.bot.setVersion("Graylog2 IRC Output plugin version 0.1");
 		this.bot.setMessageDelay(0); // No delay between message sends
 	}
 	
 	private boolean configSet(Map<String, String> target, String key)
 	{
-        return target != null && target.containsKey(key)
-                && target.get(key) != null && !target.get(key).isEmpty();
+		return target != null && target.containsKey(key)
+			&& target.get(key) != null && !target.get(key).isEmpty();
     }
 	
 	public void write(List<LogMessage> messages, OutputStreamConfiguration streamConfiguration, GraylogServer server) throws Exception
@@ -154,6 +162,7 @@ public class IRCOutput implements MessageOutput {
 		config.put("hostname", "Hostname");
 		config.put("port", "Port");
 		config.put("password", "Server Password");
+		config.put("nickname", "Nickname");
 		config.put("webinterfaceHostname", "Web Interface External Hostname");
 		
 		return config;
